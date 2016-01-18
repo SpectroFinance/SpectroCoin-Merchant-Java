@@ -16,6 +16,7 @@ import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
@@ -25,7 +26,7 @@ import java.util.Iterator;
 /**
  *
  * Created by UAB Spectro Finance.
- * This is a sample SpectroCoin Merchant v1.0 JAVA client
+ * This is a sample SpectroCoin Merchant v1.1 JAVA client
  *
  */
 public class SCMerchantClient {
@@ -61,6 +62,20 @@ public class SCMerchantClient {
 	}
 
 	/**
+	 * Constructor for Spectro coin merchant client with base parameters and URL for testing purposes
+	 * @param merchantId merchant api id
+	 * @param apiId API id
+	 * @param privateCert private key file input stream
+	 * @param URL Location of service
+	 * @throws NoSuchAlgorithmException
+	 * @throws IOException
+	 * @throws InvalidKeySpecException
+	 */
+	public SCMerchantClient(Long merchantId, Long apiId, InputStream privateCert, String URL) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
+		this(merchantId, apiId, SignUtil.loadPKC8EncodedPrivateKey(privateCert), URL);
+	}
+
+	/**
 	 * Constructor for Spectro coin merchant client with base parameters
 	 * @param merchantId merchant api id
 	 * @param apiId API id
@@ -70,6 +85,20 @@ public class SCMerchantClient {
 		this.merchantId = merchantId;
 		this.apiId = apiId;
 		this.privateKey = privateKey;
+	}
+
+	/**
+	 * Constructor for Spectro coin merchant client with base parameters and URL for testing purposes
+	 * @param merchantId merchant api id
+	 * @param apiId API id
+	 * @param privateKey private key
+	 * @param URL
+	 */
+	public SCMerchantClient(Long merchantId, Long apiId, PrivateKey privateKey, String URL) {
+		this.merchantId = merchantId;
+		this.apiId = apiId;
+		this.privateKey = privateKey;
+		this.URL = URL;
 	}
 
 	/**
@@ -122,9 +151,9 @@ public class SCMerchantClient {
 			response.setOrderRequestId((Long) jsonObject.get("orderRequestId"));
 			response.setOrderId((String) jsonObject.get("orderId"));
 			response.setPayCurrency((String) jsonObject.get("payCurrency"));
-			response.setPayAmount(new BigDecimal(jsonObject.get("payAmount").toString()).setScale(8, BigDecimal.ROUND_HALF_UP));
+			response.setPayAmount(new BigDecimal(jsonObject.get("payAmount").toString()).setScale(8, RoundingMode.HALF_UP));
 			response.setReceiveCurrency((String) jsonObject.get("receiveCurrency"));
-			response.setReceiveAmount(new BigDecimal(jsonObject.get("receiveAmount").toString()).setScale(8, BigDecimal.ROUND_HALF_DOWN));
+			response.setReceiveAmount(new BigDecimal(jsonObject.get("receiveAmount").toString()).setScale(8, RoundingMode.HALF_DOWN));
 			response.setDepositAddress((String) jsonObject.get("depositAddress"));
 			response.setValidUntil((Long) jsonObject.get("validUntil"));
 			response.setRedirectUrl((String) jsonObject.get("redirectUrl"));

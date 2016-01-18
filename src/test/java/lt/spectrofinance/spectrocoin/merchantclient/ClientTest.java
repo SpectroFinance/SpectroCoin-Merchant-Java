@@ -39,9 +39,12 @@ public class ClientTest {
 		orderRequest.setCallbackUrl("http://localhost:8000/httphandler");
 
 		//order information
-	//	orderRequest.setOrderId("CT-3009");
-		orderRequest.setPayAmount(BigDecimal.valueOf(20.0));
-		orderRequest.setDescription("Payment for Car-2547");
+//		orderRequest.setOrderId("CT-3009");
+		orderRequest.setPayCurrency("BTC");
+//		orderRequest.setPayAmount(new BigDecimal("1.23456789"));
+		orderRequest.setReceiveCurrency("USD");
+		orderRequest.setReceiveAmount(new BigDecimal("15.99"));
+		orderRequest.setDescription("Payment for Order-2547");
 
 		MerchantAPIResponse orderResponse = client.createOrder(orderRequest);
 

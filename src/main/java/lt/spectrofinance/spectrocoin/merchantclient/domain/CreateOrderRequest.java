@@ -19,7 +19,9 @@ public class CreateOrderRequest {
 	private Long merchantId;
 	private Long apiId;
 	private String orderId;
+	private String payCurrency;
 	private BigDecimal payAmount;
+	private String receiveCurrency;
 	private BigDecimal receiveAmount;
 	private String description;
 	private String culture;
@@ -53,12 +55,28 @@ public class CreateOrderRequest {
 		this.orderId = orderId;
 	}
 
+	public String getPayCurrency() {
+		return payCurrency;
+	}
+
+	public void setPayCurrency(String payCurrency) {
+		this.payCurrency = payCurrency;
+	}
+
 	public BigDecimal getPayAmount() {
 		return payAmount;
 	}
 
 	public void setPayAmount(BigDecimal payAmount) {
 		this.payAmount = payAmount;
+	}
+
+	public String getReceiveCurrency() {
+		return receiveCurrency;
+	}
+
+	public void setReceiveCurrency(String receiveCurrency) {
+		this.receiveCurrency = receiveCurrency;
 	}
 
 	public BigDecimal getReceiveAmount() {
@@ -131,8 +149,8 @@ public class CreateOrderRequest {
 		//orderId
 		result.add(new BasicNameValuePair("orderId", orderId == null ? "" : orderId));
 
-		//currency
-		result.add(new BasicNameValuePair("payCurrency", "BTC"));
+		//payCurrency
+		result.add(new BasicNameValuePair("payCurrency", payCurrency == null ? "" : payCurrency));
 
 		//payAmount
 		String payAmount = "0.0";
@@ -140,6 +158,9 @@ public class CreateOrderRequest {
 			payAmount = getNumberFormatter().format(this.payAmount);
 		}
 		result.add(new BasicNameValuePair("payAmount", payAmount));
+
+		//receiveCurrency
+		result.add(new BasicNameValuePair("receiveCurrency", receiveCurrency == null ? "" : receiveCurrency));
 
 		//receiveAmount
 		String receiveAmount = "0.0";
@@ -165,5 +186,4 @@ public class CreateOrderRequest {
 
 		return result;
 	}
-
 }

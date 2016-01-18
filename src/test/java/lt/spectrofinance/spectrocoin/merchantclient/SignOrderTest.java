@@ -41,13 +41,15 @@ public class SignOrderTest {
 		newOrder.setMerchantId(25L);
 		newOrder.setApiId(74L);
 		newOrder.setOrderId("NO-2514");
-		newOrder.setPayAmount(BigDecimal.valueOf(20.0));
+		newOrder.setPayCurrency("BTC");
+		newOrder.setPayAmount(new BigDecimal("20.0"));
+		newOrder.setReceiveCurrency("EUR");
 		newOrder.setDescription("Super payment");
 		newOrder.setCallbackUrl("http://mySite.com/callback");
 
 		String formValue = URLEncodedUtils.format(newOrder.getParameters(), "UTF-8");
-
-        String si = "dOXYqS9O8OnjVBGNA/RcPxCn5ELuJ4v6ZGRjD5PuD+fOlWBUuL8TgqoEC8cngHbzFdNs43PUYL0nu/2EtAE6eZAFvp4Y9wXrVVh+/nuRI62V3GvzM8kBHBtYNax8o7bTsxsL6NB2sxrd6H8hD109toLKbdp7Ukn+VEzQ+wfB4oK+Cjx2t/lsU1nXNX8sROh7aT8eMZOxVOMMJZwH/UbbOEl2obgb+mYZ7o6agffNBT77dgQ+3r4NJBq19Bhl9VVnTIw3mWuQGJtTSbIpd16q543EFWIVnlev7DU4CD/7T8+n8tIRfs7f/6BmqmirCFNOEZ3QqDYqNakgEbGo3yLRqA==";
+		System.out.println("formValue = " + formValue);
+		String si = "eOunQbsLmsziZIqJUDeShg7YgVsIghQ+WGbU94bi6/KaUwg82KbEjF0jLlQbe0UH29ImlWj5fG6/vsjl85WoHJ9FTrDnJ1l5gDzs9GYMz9pzFiCmAU4wkcOgaYhsh69WZeT6B4k/DpmfoKv07T0q5FEj3YBwHIZZl87/HBtzMBhno83SlsvICO5OmTu9x6g+iLl/gruDraPabY2yQa+i7gKtDcFFXgi+5TqIQQhebmQ27PqaIimI3gBEDWx3GOkG3ubt0xcAwYsdS2ufMpaXKfO+lUi9YnWXv7kny9/FTZuLAzVtmJoxOo4LgocrTNVv0pLflqtcNcxrwmCRO1vWAA==";
 
 		InputStream inputStream = new FileInputStream(new File(resourcePath.toString()));
 		PrivateKey privateKey = SignUtil.loadPKC8EncodedPrivateKey(inputStream);
