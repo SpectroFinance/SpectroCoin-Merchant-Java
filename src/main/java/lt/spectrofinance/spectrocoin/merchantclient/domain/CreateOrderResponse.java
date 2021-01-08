@@ -19,6 +19,7 @@ public class CreateOrderResponse extends MerchantAPIResponse {
 	private String depositAddress;
 	private Long validUntil;
 	private String redirectUrl;
+	private String memo;
 
 	public Long getOrderRequestId() {
 		return orderRequestId;
@@ -92,6 +93,10 @@ public class CreateOrderResponse extends MerchantAPIResponse {
 		this.redirectUrl = redirectUrl;
 	}
 
+	public String getMemo() {return memo;}
+
+	public void setMemo(String memo) {this.memo = memo;}
+
 	@Override
 	public String toString() {
 		return "CreateOrderResponse{" +
@@ -104,6 +109,7 @@ public class CreateOrderResponse extends MerchantAPIResponse {
 				", depositAddress='" + depositAddress + '\'' +
 				", validUntil=" + validUntil +
 				", redirectUrl='" + redirectUrl + '\'' +
+				", memo='" + memo + '\'' +
 				'}';
 	}
 }

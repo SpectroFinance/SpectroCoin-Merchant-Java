@@ -16,10 +16,10 @@ import java.security.spec.InvalidKeySpecException;
 
 public class HandlerTest {
 
-	String PUBLIC_KEY_URL = "https://spectrocoin.com/files/merchant.public.pem";
+	private static final String PUBLIC_KEY_URL = "https://spectrocoin.com/files/merchant.public.pem";
 
 	@Test
-	public void test() throws InterruptedException, IOException, URISyntaxException, InvalidKeySpecException, NoSuchAlgorithmException {
+	public void shouldProcessMerchantCallback() throws InterruptedException, IOException, InvalidKeySpecException, NoSuchAlgorithmException {
 
 		System.out.println("Starting HTTP server and waiting for callback...");
 

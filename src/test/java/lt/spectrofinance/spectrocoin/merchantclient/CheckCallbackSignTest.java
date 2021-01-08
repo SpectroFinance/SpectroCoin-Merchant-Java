@@ -25,10 +25,10 @@ import static org.junit.Assert.assertNotNull;
 
 public class CheckCallbackSignTest {
 
-    private String SC_PUBLIC_KEY_FILE_NAME = "sc_public_key.pem";
+    private static final String SC_PUBLIC_KEY_FILE_NAME = "sc_public_key.pem";
 
     @Test
-    public void checkCallbackSign() throws InvalidKeySpecException, SignatureException, NoSuchAlgorithmException, InvalidKeyException, IOException, URISyntaxException {
+    public void shouldCheckCallbackSign() throws InvalidKeySpecException, SignatureException, NoSuchAlgorithmException, InvalidKeyException, IOException, URISyntaxException {
 		assertNotNull("Public key file missing", getClass().getClassLoader().getResource(SC_PUBLIC_KEY_FILE_NAME));
 
 		URL resourceUrl = getClass().getClassLoader().getResource(SC_PUBLIC_KEY_FILE_NAME);
@@ -61,5 +61,4 @@ public class CheckCallbackSignTest {
 		boolean callbackSign = SignUtil.checkSign(value, responseSign, publicKey);
 		Assert.assertTrue("Bad sign", callbackSign);
     }
-
 }

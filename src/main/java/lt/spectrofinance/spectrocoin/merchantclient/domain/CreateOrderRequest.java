@@ -138,7 +138,7 @@ public class CreateOrderRequest {
 
 	public ArrayList<BasicNameValuePair> getParameters(){
 
-		ArrayList<BasicNameValuePair> result = new ArrayList<BasicNameValuePair>();
+		ArrayList<BasicNameValuePair> result = new ArrayList<>();
 
 		//merchantId
 		result.add(new BasicNameValuePair("merchantId", String.valueOf(merchantId)));

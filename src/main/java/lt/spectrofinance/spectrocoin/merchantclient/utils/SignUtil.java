@@ -15,8 +15,10 @@ import java.security.spec.X509EncodedKeySpec;
  * This is a sample SpectroCoin Merchant v1.0 JAVA client
  */
 public class SignUtil {
-
 	private static final String TYPE = "SHA1withRSA";
+	private static final String RSA = "RSA";
+
+	private SignUtil() {}
 
 	/**
 	 * @param value       UTF-8 URL Encoded and concatenated parameters
@@ -78,22 +80,37 @@ public class SignUtil {
 	}
 
 	/**
-	 * Load PKC8 encoded private key from privateKeyStream input stream.
+	 * Load PKC8 encoded private key from file.
 	 *
-	 * @param privateKeyStream
+	 * @param filename
 	 * @return
 	 * @throws IOException
 	 * @throws NoSuchAlgorithmException
 	 * @throws InvalidKeySpecException
 	 */
-	public static PrivateKey loadPKC8EncodedPrivateKey(InputStream privateKeyStream) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-		byte[] keyBytes = IOUtils.toByteArray(privateKeyStream);
-		// decode private key
-		PKCS8EncodedKeySpec privSpec = new PKCS8EncodedKeySpec(keyBytes);
-		KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-		PrivateKey ourKey = keyFactory.generatePrivate(privSpec);
+	public static PrivateKey loadPKC8EncodedPrivateKey(String filename) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+		File file = new File(filename);
+		FileInputStream fis = new FileInputStream(file);
+		DataInputStream dis = new DataInputStream(fis);
 
-		return ourKey;
+		byte[] keyBytes;
+		try {
+			keyBytes = new byte[(int) file.length()];
+			dis.readFully(keyBytes);
+		} finally {
+			dis.close();
+		}
+
+		String privateKeyString = new String(keyBytes);
+		String privateKeyPEM = privateKeyString.replace("-----BEGIN PRIVATE KEY-----", "");
+		privateKeyPEM = privateKeyPEM.replace("-----END PRIVATE KEY-----", "");
+
+		BASE64Decoder base64Decoder = new BASE64Decoder();
+		byte[] decoded = base64Decoder.decodeBuffer(privateKeyPEM);
+
+		PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(decoded);
+		KeyFactory keyFactory = KeyFactory.getInstance(RSA);
+		return keyFactory.generatePrivate(spec);
 	}
 
 	/**
@@ -115,7 +132,7 @@ public class SignUtil {
 		byte[] keyBytes = new BASE64Decoder().decodeBuffer(keyValue);
 
 		X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
-		KeyFactory kf = KeyFactory.getInstance("RSA");
+		KeyFactory kf = KeyFactory.getInstance(RSA);
 		return kf.generatePublic(spec);
 	}
 }

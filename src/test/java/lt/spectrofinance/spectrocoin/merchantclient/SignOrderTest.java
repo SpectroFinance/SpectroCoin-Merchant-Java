@@ -6,13 +6,11 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.InvalidKeyException;
@@ -25,11 +23,19 @@ import static org.junit.Assert.assertNotNull;
 
 public class SignOrderTest {
 
-    private String PRIVATE_KEY_FILE_NAME = "private_key.der";
+	private static final String PRIVATE_KEY_FILE_NAME = "private_key.pem";
+	private static final String SIGNATURE = "JFPxp4zS680iWjP4L4uqnuV2Hk4HN6cz5yfxfzuHpvLUp5Rn96JZZW5D0CLNUZ8nVr3CH8ihBA3L3cZVodkzb5zz+XWOvuH4gWC9XJv8bHtIyRuX5KlzqaxTMeWvDXy0ozmOdHG0QVnCq44JrjmA/r4HvJYli1H9op6L2nGyy1NWZi1L4JaDsy7yIYu2m20Plb0m7Zjqnss1QuZgeORnZCFncxmUAkKfiFQbf8h9nd+WQqJ8tW15Fcfbtm0wYyj8C/EGvt/27eLCRLv+cAcs2tOW6+VW83PfdUXMRzVkcjLdn4tC8+DybejbBxKfHRYa5D5mymmnF2k933fuUNiAkw==";
+	private static final long MERCHANT_ID = 25L;
+	private static final long API_ID = 74L;
+	private static final String ORDER_ID = "NO-2514";
+	private static final String PAY_CURRENCY = "BTC";
+	private static final BigDecimal PAY_AMOUNT = new BigDecimal("20.0");
+	private static final String RECEIVE_CURRENCY = "EUR";
+	private static final String DESCRIPTION = "Super payment";
+	private static final String CALLBACK_URL = "http://mySite.com/callback";
 
-    @Test
-    public void Test() throws URISyntaxException, NoSuchAlgorithmException, SignatureException, InvalidKeySpecException, InvalidKeyException, IOException {
-
+	@Test
+    public void shouldValidateMerchantOrderSignature() throws URISyntaxException, NoSuchAlgorithmException, SignatureException, InvalidKeySpecException, InvalidKeyException, IOException {
         assertNotNull("Private key file missing", getClass().getClassLoader().getResource(PRIVATE_KEY_FILE_NAME));
 
         URL resourceUrl = getClass().getClassLoader().getResource(PRIVATE_KEY_FILE_NAME);
@@ -38,25 +44,51 @@ public class SignOrderTest {
 
 		CreateOrderRequest newOrder = new CreateOrderRequest();
 
-		newOrder.setMerchantId(25L);
-		newOrder.setApiId(74L);
-		newOrder.setOrderId("NO-2514");
-		newOrder.setPayCurrency("BTC");
-		newOrder.setPayAmount(new BigDecimal("20.0"));
-		newOrder.setReceiveCurrency("EUR");
-		newOrder.setDescription("Super payment");
-		newOrder.setCallbackUrl("http://mySite.com/callback");
+		newOrder.setMerchantId(MERCHANT_ID);
+		newOrder.setApiId(API_ID);
+		newOrder.setOrderId(ORDER_ID);
+		newOrder.setPayCurrency(PAY_CURRENCY);
+		newOrder.setPayAmount(PAY_AMOUNT);
+		newOrder.setReceiveCurrency(RECEIVE_CURRENCY);
+		newOrder.setDescription(DESCRIPTION);
+		newOrder.setCallbackUrl(CALLBACK_URL);
 
-		String formValue = URLEncodedUtils.format(newOrder.getParameters(), "UTF-8");
+		String formValue = URLEncodedUtils.format(newOrder.getParameters(), StandardCharsets.UTF_8);
 		System.out.println("formValue = " + formValue);
-		String si = "eOunQbsLmsziZIqJUDeShg7YgVsIghQ+WGbU94bi6/KaUwg82KbEjF0jLlQbe0UH29ImlWj5fG6/vsjl85WoHJ9FTrDnJ1l5gDzs9GYMz9pzFiCmAU4wkcOgaYhsh69WZeT6B4k/DpmfoKv07T0q5FEj3YBwHIZZl87/HBtzMBhno83SlsvICO5OmTu9x6g+iLl/gruDraPabY2yQa+i7gKtDcFFXgi+5TqIQQhebmQ27PqaIimI3gBEDWx3GOkG3ubt0xcAwYsdS2ufMpaXKfO+lUi9YnWXv7kny9/FTZuLAzVtmJoxOo4LgocrTNVv0pLflqtcNcxrwmCRO1vWAA==";
 
-		InputStream inputStream = new FileInputStream(new File(resourcePath.toString()));
-		PrivateKey privateKey = SignUtil.loadPKC8EncodedPrivateKey(inputStream);
-		String orderSign = SignUtil.sign(formValue, privateKey);
-		System.out.println("orderSign = " + orderSign);
+		PrivateKey privateKey = SignUtil.loadPKC8EncodedPrivateKey(resourcePath.toString());
+		String result = SignUtil.sign(formValue, privateKey);
+		System.out.println("orderSign = " + result);
 
-		Assert.assertEquals("Not equal ! ! !", si, orderSign);
-
+		Assert.assertEquals("Not equal ! ! !", SIGNATURE, result);
     }
+
+	@Test
+	public void shouldFail_whenMerchantOrderSignatureIsIncorrect() throws URISyntaxException, NoSuchAlgorithmException, SignatureException, InvalidKeySpecException, InvalidKeyException, IOException {
+		assertNotNull("Private key file missing", getClass().getClassLoader().getResource(PRIVATE_KEY_FILE_NAME));
+
+		URL resourceUrl = getClass().getClassLoader().getResource(PRIVATE_KEY_FILE_NAME);
+		Path resourcePath = Paths.get(resourceUrl.toURI());
+		System.out.println("resourcePath = " + resourcePath);
+
+		CreateOrderRequest newOrder = new CreateOrderRequest();
+
+		newOrder.setMerchantId(MERCHANT_ID);
+		newOrder.setApiId(API_ID);
+		newOrder.setOrderId(ORDER_ID);
+		newOrder.setPayCurrency(PAY_CURRENCY);
+		newOrder.setPayAmount(PAY_AMOUNT.add(BigDecimal.ONE));
+		newOrder.setReceiveCurrency(RECEIVE_CURRENCY);
+		newOrder.setDescription(DESCRIPTION);
+		newOrder.setCallbackUrl(CALLBACK_URL);
+
+		String formValue = URLEncodedUtils.format(newOrder.getParameters(), StandardCharsets.UTF_8);
+		System.out.println("formValue = " + formValue);
+
+		PrivateKey privateKey = SignUtil.loadPKC8EncodedPrivateKey(resourcePath.toString());
+		String result = SignUtil.sign(formValue, privateKey);
+		System.out.println("orderSign = " + result);
+
+		Assert.assertNotEquals("Equal ! ! !", SIGNATURE, result);
+	}
 }

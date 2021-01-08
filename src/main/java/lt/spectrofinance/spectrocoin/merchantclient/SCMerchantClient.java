@@ -1,6 +1,10 @@
 package lt.spectrofinance.spectrocoin.merchantclient;
 
-import lt.spectrofinance.spectrocoin.merchantclient.domain.*;
+import lt.spectrofinance.spectrocoin.merchantclient.domain.ApiError;
+import lt.spectrofinance.spectrocoin.merchantclient.domain.CreateOrderErrorResponse;
+import lt.spectrofinance.spectrocoin.merchantclient.domain.CreateOrderRequest;
+import lt.spectrofinance.spectrocoin.merchantclient.domain.CreateOrderResponse;
+import lt.spectrofinance.spectrocoin.merchantclient.domain.MerchantAPIResponse;
 import lt.spectrofinance.spectrocoin.merchantclient.utils.SignUtil;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -14,7 +18,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.NoSuchAlgorithmException;
@@ -31,9 +37,9 @@ import java.util.Iterator;
  */
 public class SCMerchantClient {
 
-	private String URL = "https://spectrocoin.com/api/merchant/1/createOrder";
-	private String CHARSET_NAME = "UTF-8";
+	private static final String CHARSET_NAME = "UTF-8";
 
+	private String url = "https://spectrocoin.com/api/merchant/1/createOrder";
 	private PrivateKey privateKey;
 	private Long apiId;
 	private Long merchantId;
@@ -42,37 +48,27 @@ public class SCMerchantClient {
 	 * Constructor for Spectro coin merchant client with base parameters
 	 * @param merchantId merchant api id
 	 * @param apiId API id
-	 * @param privateCertFileLoc private key file location
-	 */
-	public SCMerchantClient(Long merchantId, Long apiId, String privateCertFileLoc) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-		this(merchantId, apiId, new FileInputStream(new File(privateCertFileLoc)));
-	}
-
-	/**
-	 * Constructor for Spectro coin merchant client with base parameters
-	 * @param merchantId merchant api id
-	 * @param apiId API id
-	 * @param privateCert private key file input stream
+	 * @param privateKeyFilePath private key file path
 	 * @throws NoSuchAlgorithmException
 	 * @throws IOException
 	 * @throws InvalidKeySpecException
 	 */
-	public SCMerchantClient(Long merchantId, Long apiId, InputStream privateCert) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
-		this(merchantId, apiId, SignUtil.loadPKC8EncodedPrivateKey(privateCert));
+	public SCMerchantClient(Long merchantId, Long apiId, String privateKeyFilePath) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
+		this(merchantId, apiId, SignUtil.loadPKC8EncodedPrivateKey(privateKeyFilePath));
 	}
 
 	/**
-	 * Constructor for Spectro coin merchant client with base parameters and URL for testing purposes
+	 * Constructor for Spectro coin merchant client with base parameters and url for testing purposes
 	 * @param merchantId merchant api id
 	 * @param apiId API id
-	 * @param privateCert private key file input stream
-	 * @param URL Location of service
+	 * @param privateKeyFilePath private key file path
+	 * @param url Location of service
 	 * @throws NoSuchAlgorithmException
 	 * @throws IOException
 	 * @throws InvalidKeySpecException
 	 */
-	public SCMerchantClient(Long merchantId, Long apiId, InputStream privateCert, String URL) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
-		this(merchantId, apiId, SignUtil.loadPKC8EncodedPrivateKey(privateCert), URL);
+	public SCMerchantClient(Long merchantId, Long apiId, String privateKeyFilePath, String url) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
+		this(merchantId, apiId, SignUtil.loadPKC8EncodedPrivateKey(privateKeyFilePath), url);
 	}
 
 	/**
@@ -88,17 +84,17 @@ public class SCMerchantClient {
 	}
 
 	/**
-	 * Constructor for Spectro coin merchant client with base parameters and URL for testing purposes
+	 * Constructor for Spectro coin merchant client with base parameters and url for testing purposes
 	 * @param merchantId merchant api id
 	 * @param apiId API id
 	 * @param privateKey private key
-	 * @param URL
+	 * @param url
 	 */
-	public SCMerchantClient(Long merchantId, Long apiId, PrivateKey privateKey, String URL) {
+	public SCMerchantClient(Long merchantId, Long apiId, PrivateKey privateKey, String url) {
 		this.merchantId = merchantId;
 		this.apiId = apiId;
 		this.privateKey = privateKey;
-		this.URL = URL;
+		this.url = url;
 	}
 
 	/**
@@ -113,7 +109,7 @@ public class SCMerchantClient {
 		orderRequest.setApiId(apiId);
 
 		HttpClient client = HttpClientBuilder.create().build();
-		HttpPost post = new HttpPost(URL);
+		HttpPost post = new HttpPost(url);
 
 		ArrayList<BasicNameValuePair> parameters = orderRequest.getParameters();
 
@@ -157,6 +153,7 @@ public class SCMerchantClient {
 			response.setDepositAddress((String) jsonObject.get("depositAddress"));
 			response.setValidUntil((Long) jsonObject.get("validUntil"));
 			response.setRedirectUrl((String) jsonObject.get("redirectUrl"));
+			response.setMemo((String) jsonObject.get("memo"));
 
 		} catch (ClassCastException e){
 			return parseError(responseText);
