@@ -38,8 +38,8 @@ public class SignOrderTest {
 
 		CreateOrderRequest newOrder = new CreateOrderRequest();
 
-		newOrder.setMerchantId(25L);
-		newOrder.setApiId(74L);
+		newOrder.setUserId(25L);
+		newOrder.setMerchantApiId(74L);
 		newOrder.setOrderId("NO-2514");
 		newOrder.setPayCurrency("BTC");
 		newOrder.setPayAmount(new BigDecimal("20.0"));

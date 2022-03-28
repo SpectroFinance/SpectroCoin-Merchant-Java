@@ -23,11 +23,11 @@ public class SignatureBuilderUtil {
 
 		ArrayList<BasicNameValuePair> result = new ArrayList<BasicNameValuePair>();
 
-		//merchantId
-		result.add(new BasicNameValuePair("merchantId", String.valueOf(orderCallback.getMerchantId())));
+		//userId
+		result.add(new BasicNameValuePair("userId", String.valueOf(orderCallback.getUserId())));
 
-		//apiId
-		result.add(new BasicNameValuePair("apiId", String.valueOf(orderCallback.getApiId())));
+		//merchantApiId
+		result.add(new BasicNameValuePair("merchantApiId", String.valueOf(orderCallback.getMerchantApiId())));
 
 		//orderId
 		result.add(new BasicNameValuePair("orderId", orderCallback.getOrderId()));

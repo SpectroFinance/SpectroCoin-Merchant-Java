@@ -35,68 +35,68 @@ public class SCMerchantClient {
 	private String CHARSET_NAME = "UTF-8";
 
 	private PrivateKey privateKey;
-	private Long apiId;
-	private Long merchantId;
+	private Long merchantApiId;
+	private Long userId;
 
 	/**
 	 * Constructor for Spectro coin merchant client with base parameters
-	 * @param merchantId merchant api id
-	 * @param apiId API id
+	 * @param userId merchant api id
+	 * @param merchantApiId API id
 	 * @param privateCertFileLoc private key file location
 	 */
-	public SCMerchantClient(Long merchantId, Long apiId, String privateCertFileLoc) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-		this(merchantId, apiId, new FileInputStream(new File(privateCertFileLoc)));
+	public SCMerchantClient(Long userId, Long merchantApiId, String privateCertFileLoc) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+		this(userId, merchantApiId, new FileInputStream(new File(privateCertFileLoc)));
 	}
 
 	/**
 	 * Constructor for Spectro coin merchant client with base parameters
-	 * @param merchantId merchant api id
-	 * @param apiId API id
+	 * @param userId merchant api id
+	 * @param merchantApiId API id
 	 * @param privateCert private key file input stream
 	 * @throws NoSuchAlgorithmException
 	 * @throws IOException
 	 * @throws InvalidKeySpecException
 	 */
-	public SCMerchantClient(Long merchantId, Long apiId, InputStream privateCert) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
-		this(merchantId, apiId, SignUtil.loadPKC8EncodedPrivateKey(privateCert));
+	public SCMerchantClient(Long userId, Long merchantApiId, InputStream privateCert) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
+		this(userId, merchantApiId, SignUtil.loadPKC8EncodedPrivateKey(privateCert));
 	}
 
 	/**
 	 * Constructor for Spectro coin merchant client with base parameters and URL for testing purposes
-	 * @param merchantId merchant api id
-	 * @param apiId API id
+	 * @param userId merchant api id
+	 * @param merchantApiId API id
 	 * @param privateCert private key file input stream
 	 * @param URL Location of service
 	 * @throws NoSuchAlgorithmException
 	 * @throws IOException
 	 * @throws InvalidKeySpecException
 	 */
-	public SCMerchantClient(Long merchantId, Long apiId, InputStream privateCert, String URL) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
-		this(merchantId, apiId, SignUtil.loadPKC8EncodedPrivateKey(privateCert), URL);
+	public SCMerchantClient(Long userId, Long merchantApiId, InputStream privateCert, String URL) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
+		this(userId, merchantApiId, SignUtil.loadPKC8EncodedPrivateKey(privateCert), URL);
 	}
 
 	/**
 	 * Constructor for Spectro coin merchant client with base parameters
-	 * @param merchantId merchant api id
-	 * @param apiId API id
+	 * @param userId merchant api id
+	 * @param merchantApiId API id
 	 * @param privateKey private key
 	 */
-	public SCMerchantClient(Long merchantId, Long apiId, PrivateKey privateKey) {
-		this.merchantId = merchantId;
-		this.apiId = apiId;
+	public SCMerchantClient(Long userId, Long merchantApiId, PrivateKey privateKey) {
+		this.userId = userId;
+		this.merchantApiId = merchantApiId;
 		this.privateKey = privateKey;
 	}
 
 	/**
 	 * Constructor for Spectro coin merchant client with base parameters and URL for testing purposes
-	 * @param merchantId merchant api id
-	 * @param apiId API id
+	 * @param userId merchant api id
+	 * @param merchantApiId API id
 	 * @param privateKey private key
 	 * @param URL
 	 */
-	public SCMerchantClient(Long merchantId, Long apiId, PrivateKey privateKey, String URL) {
-		this.merchantId = merchantId;
-		this.apiId = apiId;
+	public SCMerchantClient(Long userId, Long merchantApiId, PrivateKey privateKey, String URL) {
+		this.userId = userId;
+		this.merchantApiId = merchantApiId;
 		this.privateKey = privateKey;
 		this.URL = URL;
 	}
@@ -109,8 +109,8 @@ public class SCMerchantClient {
 	 */
 	public MerchantAPIResponse createOrder(CreateOrderRequest orderRequest) throws Exception {
 
-		orderRequest.setMerchantId(merchantId);
-		orderRequest.setApiId(apiId);
+		orderRequest.setUserId(userId);
+		orderRequest.setMerchantApiId(merchantApiId);
 
 		HttpClient client = HttpClientBuilder.create().build();
 		HttpPost post = new HttpPost(URL);

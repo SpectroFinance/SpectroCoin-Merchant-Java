@@ -14,8 +14,8 @@ public class URLEncoderTest {
 
 		CreateOrderRequest newOrder = new CreateOrderRequest();
 
-		newOrder.setMerchantId(25L);
-		newOrder.setApiId(74L);
+		newOrder.setUserId(25L);
+		newOrder.setMerchantApiId(74L);
 		newOrder.setOrderId("NO-2514");
 		newOrder.setPayCurrency("BTC");
 		newOrder.setPayAmount(new BigDecimal("20.0"));
@@ -26,7 +26,7 @@ public class URLEncoderTest {
 		String valueForSign = URLEncodedUtils.format(newOrder.getParameters(), "UTF-8");
 		System.out.println("valueForSign = " + valueForSign);
 
-		String value = "merchantId=25&apiId=74&orderId=NO-2514&payCurrency=BTC&payAmount=20.0&receiveCurrency=EUR&receiveAmount=0.0&description=Super+payment&culture=&callbackUrl=http%3A%2F%2FmySite.com%2Fcallback&successUrl=&failureUrl=";
+		String value = "userId=25&merchantApiId=74&orderId=NO-2514&payCurrency=BTC&payAmount=20.0&receiveCurrency=EUR&receiveAmount=0.0&description=Super+payment&culture=&callbackUrl=http%3A%2F%2FmySite.com%2Fcallback&successUrl=&failureUrl=";
 
 		Assert.assertEquals(value, valueForSign);
 

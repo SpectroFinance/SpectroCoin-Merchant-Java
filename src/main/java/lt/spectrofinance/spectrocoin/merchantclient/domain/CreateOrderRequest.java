@@ -16,8 +16,8 @@ import java.util.ArrayList;
  */
 public class CreateOrderRequest {
 
-	private Long merchantId;
-	private Long apiId;
+	private Long userId;
+	private Long merchantApiId;
 	private String orderId;
 	private String payCurrency;
 	private BigDecimal payAmount;
@@ -31,20 +31,20 @@ public class CreateOrderRequest {
 
 	private static NumberFormat numberFormatter;
 
-	public Long getMerchantId() {
-		return merchantId;
+	public Long getUserId() {
+		return userId;
 	}
 
-	public void setMerchantId(Long merchantId) {
-		this.merchantId = merchantId;
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
-	public Long getApiId() {
-		return apiId;
+	public Long getMerchantApiId() {
+		return merchantApiId;
 	}
 
-	public void setApiId(Long apiId) {
-		this.apiId = apiId;
+	public void setMerchantApiId(Long merchantApiId) {
+		this.merchantApiId = merchantApiId;
 	}
 
 	public String getOrderId() {
@@ -140,11 +140,11 @@ public class CreateOrderRequest {
 
 		ArrayList<BasicNameValuePair> result = new ArrayList<BasicNameValuePair>();
 
-		//merchantId
-		result.add(new BasicNameValuePair("merchantId", String.valueOf(merchantId)));
+		//userId
+		result.add(new BasicNameValuePair("userId", String.valueOf(userId)));
 
-		//apiId
-		result.add(new BasicNameValuePair("apiId", String.valueOf(apiId)));
+		//merchantApiId
+		result.add(new BasicNameValuePair("merchantApiId", String.valueOf(merchantApiId)));
 
 		//orderId
 		result.add(new BasicNameValuePair("orderId", orderId == null ? "" : orderId));

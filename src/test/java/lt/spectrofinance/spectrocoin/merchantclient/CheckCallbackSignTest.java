@@ -39,8 +39,8 @@ public class CheckCallbackSignTest {
 
 		OrderCallback orderCallback = new OrderCallback();
 
-		orderCallback.setMerchantId(169L);
-		orderCallback.setApiId(3L);
+		orderCallback.setUserId(169L);
+		orderCallback.setMerchantApiId(3L);
 		orderCallback.setOrderId("275");
 		orderCallback.setPayCurrency("BTC");
 		orderCallback.setPayAmount(new BigDecimal("20.0"));
