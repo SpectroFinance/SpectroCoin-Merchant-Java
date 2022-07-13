@@ -13,8 +13,10 @@ import java.util.List;
  */
 public class OrderCallback implements IOrderCallback {
 
-	private Long userId;
+	private Long merchantId;
 	private Long merchantApiId;
+	private Long userId;
+	private Long apiId;
 	private String orderId;
 	private String payCurrency;
 	private BigDecimal payAmount;
@@ -43,9 +45,13 @@ public class OrderCallback implements IOrderCallback {
 	private void addValue(NameValuePair pair) throws Exception {
 
 		switch (pair.getName()){
-			case "userId" : userId = Long.valueOf(pair.getValue());
+			case "merchantId" : merchantId = Long.valueOf(pair.getValue());
 				break;
 			case "merchantApiId" : merchantApiId = Long.valueOf(pair.getValue());
+				break;
+			case "userId" : userId = Long.valueOf(pair.getValue());
+				break;
+			case "apiId" : apiId = Long.valueOf(pair.getValue());
 				break;
 			case "orderId" : orderId = pair.getValue();
 				break;
@@ -71,6 +77,14 @@ public class OrderCallback implements IOrderCallback {
 
 	}
 
+	public Long getMerchantId() {
+		return merchantId;
+	}
+
+	public void setMerchantId(Long merchantId) {
+		this.merchantId = merchantId;
+	}
+
 	public Long getUserId() {
 		return userId;
 	}
@@ -85,6 +99,14 @@ public class OrderCallback implements IOrderCallback {
 
 	public void setMerchantApiId(Long merchantApiId) {
 		this.merchantApiId = merchantApiId;
+	}
+
+	public Long getApiId(){
+		return apiId;
+	}
+
+	public void setApiId(Long apiId) {
+		this.apiId = apiId;
 	}
 
 	public String getOrderId() {
@@ -170,8 +192,8 @@ public class OrderCallback implements IOrderCallback {
 	@Override
 	public String toString() {
 		return "OrderCallback {" +
-				"userId=" + userId +
-				", merchantApiId=" + merchantApiId +
+				"userId=" + merchantId +
+				", merchantApiId=" + apiId +
 				", orderId=" + orderId  +
 				", payCurrency=" + payCurrency +
 				", payAmount=" + payAmount +

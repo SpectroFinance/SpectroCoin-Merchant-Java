@@ -10,8 +10,10 @@ import java.math.BigDecimal;
  */
 public interface IOrderCallback {
 
+	Long merchantId = null;
 	Long userId = null;
 	Long merchantApiId = null;
+	Long apiId = null;
 	String orderId = null;
 	String payCurrency = null;
 	BigDecimal payAmount = null;
@@ -23,8 +25,10 @@ public interface IOrderCallback {
 	OrderStatusEnum status = null;
 	String sign = null;
 
+	Long getMerchantId();
 	Long getUserId();
 	Long getMerchantApiId();
+	Long getApiId();
 	String getOrderId();
 	String getPayCurrency();
 	BigDecimal getPayAmount();
